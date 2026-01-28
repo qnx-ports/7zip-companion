@@ -1,0 +1,4 @@
+abuild
+qnx-libc++-dev
+qnx-io-sock-dev
+qnx-packaging
