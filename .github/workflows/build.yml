@@ -1,0 +1,86 @@
+name: 7zip
+
+permissions:
+  contents: write
+  checks: write
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/build.yml'
+      - 'build/Abuild/**'
+      - 'manifest.toml'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/build.yml'
+      - 'build/Abuild/**'
+      - 'manifest.toml'
+
+jobs:
+
+  build:
+    strategy:
+      matrix:
+        qnx_env: [800]
+    name: Build for QNX ${{ matrix.qnx_env }}
+    runs-on: ubuntu-22.04-common
+    if: |
+      ((github.event_name == 'workflow_dispatch') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/qnx-25.01') ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'Merge qnx-25.01')))
+    steps:
+    - name: Checkout 7zip-companion
+      uses: actions/checkout@v4
+      with:
+        path: 7zip-companion
+
+    - name: Checkout cm
+      uses: actions/checkout@v4
+      with:
+        repository: qnx-ports/cm
+        path: 7zip
+        ref: main
+
+    - name: Build 7zip 
+      shell: bash
+      run: |
+        python3.11 -m venv "$HOME/venv"
+        source "$HOME/venv/bin/activate"
+        osl_workspace="$GITHUB_WORKSPACE/osl-workspace"
+        mkdir -p "$osl_workspace"
+        mkdir -p "$osl_workspace/log"
+        mkdir -p "$osl_workspace/qemu_source"
+        mkdir -p "$osl_workspace/qemu-cache"
+        mkdir -p "$HOME/.config"
+
+        python -m pip install -e "$GITHUB_WORKSPACE/cm/python/osl"
+
+        echo "HOME dir is $HOME"
+        echo "GITHUB_WORKSPACE is $GITHUB_WORKSPACE"
+
+        ls -al "$GITHUB_WORKSPACE"
+        ls -al "$osl_workspace/qemu_source"
+        ls -al "$osl_workspace/log"
+
+        cd "$osl_workspace"
+        if [ -f "$GITHUB_WORKSPACE/cm/python/osl/src/osl/template/osl.ini.template" ]; then cp -p "$GITHUB_WORKSPACE/cm/python/osl/src/osl/template/osl.ini.template" "$HOME/.config/osl.ini"; fi
+        ls -al "$GITHUB_WORKSPACE/cm/python/osl/src/osl/template/osl.ini.template"
+        ls -al "$HOME/.config/osl.ini"
+        osl ls var
+
+        osl add qemu -u https://repo.staging.oss.qnx.com/images/x86_64-qemu-uefi-2025-12-08.tar.gz -D "$osl_workspace/qemu_source"
+        ls -al "$osl_workspace/qemu_source"
+
+        cp -p "$osl_workspace/qemu_source"/* "$osl_workspace/qemu-cache"
+        echo "Listing $osl_workspace/qemu-cache"
+        ls -al "$osl_workspace/qemu-cache"
+
+        osl start target qemu --disable-kvm -v
+
+        osl build apk -D $GITHUB_WORKSPACE/cm/python/osl/src/osl/samples/7zip/apkbuild -p $GITHUB_WORKSPACE/cm/python/osl/src/osl/samples/7zip/dependent_list.7zip -v
+        osl resolve apk
