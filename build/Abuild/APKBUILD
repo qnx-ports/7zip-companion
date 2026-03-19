@@ -9,8 +9,8 @@ arch="all"
 license="LGPL-2.0-only"
 makedepends="make"
 subpackages="$pkgname-doc"
-source="https://github.com/taang-qnx/$pkgname/archive/refs/heads/mybranch.tar.gz"
-builddir="$srcdir/$pkgname-mybranch"
+source="https://github.com/qnx-ports/$pkgname/archive/refs/tags/${pkgver}_qnx1.tar.gz"
+builddir="$srcdir/$pkgname-${pkgver}_qnx1"
 
 provides="7zip-virtual p7zip=$pkgver-r$pkgrel"
 replaces="p7zip"
@@ -64,5 +64,5 @@ package() {
 }
 
 sha512sums="
-9a5297ac1ec5944aab9a3de7935ed474a58993def87c6df60e8c245692ba7eaac21c965b1b4b605ff10ff1b42ecc541089d5e1b630afde3cc6d19d6d4f119242  mybranch.tar.gz
+db8135a442655af049a05c9303d3913dd7b665dadf79d1f9de7b8a1baa2e7de94a623a4769fef8a2d47f6198dc5e5838d13242e5ec10422734219ddf8812c258  25.01_qnx1.tar.gz
 "
