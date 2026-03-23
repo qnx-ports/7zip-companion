@@ -9,8 +9,8 @@ arch="all"
 license="LGPL-2.0-only"
 makedepends="make"
 subpackages="$pkgname-doc"
-source="https://github.com/qnx-ports/$pkgname/archive/refs/tags/${pkgver}_qnx1.tar.gz"
-builddir="$srcdir/$pkgname-${pkgver}_qnx1"
+source="https://github.com/qnx-ports/$pkgname/archive/refs/tags/qnx-${pkgver}_p0.tar.gz"
+builddir="$srcdir/$pkgname-qnx-${pkgver}_p0"
 
 provides="7zip-virtual p7zip=$pkgver-r$pkgrel"
 replaces="p7zip"
@@ -64,5 +64,5 @@ package() {
 }
 
 sha512sums="
-db8135a442655af049a05c9303d3913dd7b665dadf79d1f9de7b8a1baa2e7de94a623a4769fef8a2d47f6198dc5e5838d13242e5ec10422734219ddf8812c258  25.01_qnx1.tar.gz
+b3e51fae270e7830a773dd891b22f1c952612176dca625a7df0389b18d915aa62aabbd705ef81bbd1f391d8a61ba249f2e6fec57dbaa99d163f9cd502acb06da  qnx-25.01_p0.tar.gz
 "
