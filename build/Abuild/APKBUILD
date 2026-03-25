@@ -2,7 +2,7 @@
 pkgname=7zip
 pkgver=25.01_p0
 _pkgver=${pkgver//./}
-pkgrel=1
+pkgrel=2
 pkgdesc="File archiver with a high compression ratio"
 url="https://7-zip.org/"
 arch="all"
@@ -10,7 +10,10 @@ options="!check"
 license="LGPL-2.0-only"
 makedepends="make libc++-dev qnx-io-sock-dev"
 subpackages="$pkgname-doc"
-source="https://github.com/qnx-ports/$pkgname/archive/refs/tags/qnx-$pkgver.tar.gz"
+source="https://github.com/qnx-ports/$pkgname/archive/refs/tags/qnx-$pkgver.tar.gz
+    abc.txt
+    def.txt
+"
 builddir="$srcdir/$pkgname-qnx-$pkgver"
 
 provides="7zip-virtual p7zip=$pkgver-r$pkgrel"
@@ -66,4 +69,6 @@ package() {
 
 sha512sums="
 b3e51fae270e7830a773dd891b22f1c952612176dca625a7df0389b18d915aa62aabbd705ef81bbd1f391d8a61ba249f2e6fec57dbaa99d163f9cd502acb06da  qnx-25.01_p0.tar.gz
+4f285d0c0cc77286d8731798b7aae2639e28270d4166f40d769cbbdca5230714d848483d364e2f39fe6cb9083c15229b39a33615ebc6d57605f7c43f6906739d  abc.txt
+e9a9ce2c3d843eec9301bcb34d6b293f4fe8da3cd53d02ee2ad429fe86abf4beaf1c61d98f3b8c271fee2782078f00a6732c567a7ab2b1efb1a5ff4e22b273da  def.txt
 "
